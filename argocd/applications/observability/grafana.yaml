@@ -1,0 +1,45 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: grafana
+  namespace: argocd
+spec:
+  project: kong-observability
+  source:
+    repoURL: https://grafana.github.io/helm-charts
+    chart: grafana
+    targetRevision: 7.0.19
+    helm:
+      releaseName: grafana
+      values: |
+        adminPassword: admin
+        persistence:
+          enabled: true
+          storageClassName: standard
+          size: 5Gi
+        datasources:
+          datasources.yaml:
+            apiVersion: 1
+            datasources:
+            - name: Prometheus
+              type: prometheus
+              url: http://prometheus-kube-prometheus-prometheus:9090
+              access: proxy
+              isDefault: true
+            - name: Loki
+              type: loki
+              url: http://loki:3100
+              access: proxy
+            - name: Jaeger
+              type: jaeger
+              url: http://jaeger-query:16686
+              access: proxy
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: kong-observability
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true

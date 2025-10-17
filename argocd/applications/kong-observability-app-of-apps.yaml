@@ -1,0 +1,20 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: kong-observability-gitops
+  namespace: argocd
+spec:
+  project: kong-observability
+  source:
+    repoURL: https://github.com/debugnin/kong-observability-gitops
+    targetRevision: HEAD
+    path: argocd/applications/observability
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: argocd
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
