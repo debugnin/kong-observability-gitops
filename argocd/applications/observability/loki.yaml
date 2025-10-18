@@ -25,12 +25,6 @@ spec:
             enabled: true
             storageClass: standard
             size: 10Gi
-        backend:
-          replicas: 0
-        read:
-          replicas: 0
-        write:
-          replicas: 0
         monitoring:
           enabled: false
         test:
