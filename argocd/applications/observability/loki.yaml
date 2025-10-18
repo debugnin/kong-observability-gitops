@@ -22,14 +22,12 @@ spec:
           auth_enabled: false
           commonConfig:
             replication_factor: 1
+          storage:
+            type: filesystem
           useTestSchema: true
 
         querier:
           max_concurrent: 2
-
-        # Optional: Simplify MinIO (local object store)
-        lokiStorage:
-          type: filesystem
 
         # Use a specific image tag if desired
         image:
