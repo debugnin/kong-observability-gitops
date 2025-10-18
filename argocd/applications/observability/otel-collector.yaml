@@ -15,6 +15,8 @@ spec:
         mode: deployment
         image:
           repository: otel/opentelemetry-collector-contrib
+          tag: 0.136.0  # or match the chart version (check https://hub.docker.com/r/otel/opentelemetry-collector-contrib/tags)
+          pullPolicy: IfNotPresent
         config:
           receivers:
             otlp:
