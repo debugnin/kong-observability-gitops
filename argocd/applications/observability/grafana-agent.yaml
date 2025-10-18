@@ -13,7 +13,6 @@ spec:
       releaseName: grafana-agent-operator
       values: |
         image:
-          registry: ghcr.io
           repository: grafana/agent-operator
           tag: v0.40.4
         resources:
