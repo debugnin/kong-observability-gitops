@@ -11,7 +11,6 @@ spec:
     - "https://prometheus-community.github.io/helm-charts"
     - "https://jaegertracing.github.io/helm-charts"
     - "https://open-telemetry.github.io/opentelemetry-helm-charts"
-    - "https://charts.jetstack.io"
   destinations:
     - namespace: "kong-observability"
       server: https://kubernetes.default.svc
@@ -31,8 +30,7 @@ spec:
       kind: ValidatingWebhookConfiguration
     - group: admissionregistration.k8s.io
       kind: MutatingWebhookConfiguration
-    - group: cert-manager.io
-      kind: ClusterIssuer
+
     - group: monitoring.grafana.com
       kind: "*"
   namespaceResourceWhitelist:
@@ -48,8 +46,7 @@ spec:
       kind: "*"
     - group: autoscaling
       kind: "*"
-    - group: cert-manager.io
-      kind: "*"
+
     - group: batch
       kind: "*"
     - group: monitoring.coreos.com
