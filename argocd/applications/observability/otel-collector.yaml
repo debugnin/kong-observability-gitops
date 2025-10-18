@@ -28,18 +28,18 @@ spec:
           processors:
             batch: {}
           exporters:
-            logging:
-              loglevel: debug
+            debug:
+              verbosity: detailed
           service:
             pipelines:
               traces:
                 receivers: [otlp]
                 processors: [batch]
-                exporters: [logging]
+                exporters: [debug]
               logs:
                 receivers: [otlp]
                 processors: [batch]
-                exporters: [logging]
+                exporters: [debug]
   destination:
     server: https://kubernetes.default.svc
     namespace: kong-observability
