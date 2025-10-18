@@ -8,15 +8,11 @@ spec:
   source:
     repoURL: https://grafana.github.io/helm-charts
     chart: loki
-    targetRevision: 5.41.4
+    targetRevision: 6.43.0
     helm:
       releaseName: loki
       skipCrds: true
       values: |
-        # Disable Grafana Agent integration
-        grafanaAgent:
-          enabled: false
-
         # Loki deployment configuration
         deploymentMode: SingleBinary
         singleBinary:
