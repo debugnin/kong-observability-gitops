@@ -8,7 +8,7 @@ spec:
   source:
     repoURL: https://open-telemetry.github.io/opentelemetry-helm-charts
     chart: opentelemetry-collector
-    targetRevision: 0.74.0
+    targetRevision: 0.136.1
     helm:
       releaseName: otel-collector
       values: |
@@ -24,28 +24,18 @@ spec:
           processors:
             batch: {}
           exporters:
-            jaeger:
-              endpoint: jaeger-collector:14250
-              tls:
-                insecure: true
-            prometheus:
-              endpoint: "0.0.0.0:8889"
-            loki:
-              endpoint: http://loki:3100/loki/api/v1/push
+            logging:
+              loglevel: debug
           service:
             pipelines:
               traces:
                 receivers: [otlp]
                 processors: [batch]
-                exporters: [jaeger]
-              metrics:
-                receivers: [otlp]
-                processors: [batch]
-                exporters: [prometheus]
+                exporters: [logging]
               logs:
                 receivers: [otlp]
                 processors: [batch]
-                exporters: [loki]
+                exporters: [logging]
   destination:
     server: https://kubernetes.default.svc
     namespace: kong-observability
