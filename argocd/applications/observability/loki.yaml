@@ -43,6 +43,14 @@ spec:
             enabled: false
           rules:
             enabled: false
+          selfMonitoring:
+            enabled: false
+            grafanaAgent:
+              installOperator: false
+        
+        # Disable all Grafana Agent components
+        grafanaAgent:
+          enabled: false
   destination:
     server: https://kubernetes.default.svc
     namespace: kong-observability
