@@ -46,6 +46,13 @@ spec:
           replicas: 0
         bloomGateway:
           replicas: 0
+        monitoring:
+          selfMonitoring:
+            enabled: false
+            grafanaAgent:
+              installOperator: false
+        test:
+          enabled: false
   destination:
     server: https://kubernetes.default.svc
     namespace: kong-observability
