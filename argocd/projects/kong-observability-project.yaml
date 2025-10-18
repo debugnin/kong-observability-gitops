@@ -50,6 +50,8 @@ spec:
       kind: "*"
     - group: batch
       kind: "*"
+    - group: monitoring.coreos.com
+      kind: "*"
   roles:
     - name: admin
       policies:
