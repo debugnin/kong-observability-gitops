@@ -28,6 +28,12 @@ spec:
           processors:
             batch: {}
           exporters:
+            otlp/jaeger:
+              endpoint: jaeger-collector:4317
+              tls:
+                insecure: true
+            loki:
+              endpoint: http://loki:3100/loki/api/v1/push
             debug:
               verbosity: detailed
           service:
@@ -35,11 +41,11 @@ spec:
               traces:
                 receivers: [otlp]
                 processors: [batch]
-                exporters: [debug]
+                exporters: [otlp/jaeger, debug]
               logs:
                 receivers: [otlp]
                 processors: [batch]
-                exporters: [debug]
+                exporters: [loki, debug]
   destination:
     server: https://kubernetes.default.svc
     namespace: kong-observability
