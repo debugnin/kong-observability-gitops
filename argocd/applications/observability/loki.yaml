@@ -13,18 +13,40 @@ spec:
       releaseName: loki
       skipCrds: true
       values: |
+        # Disable Grafana Agent integration
+        grafanaAgent:
+          enabled: false
+
+        # Loki deployment configuration
         deploymentMode: SingleBinary
         singleBinary:
           replicas: 1
+
         loki:
           auth_enabled: false
           commonConfig:
             replication_factor: 1
           useTestSchema: true
+
         querier:
           max_concurrent: 2
+
+        # Optional: Simplify MinIO (local object store)
+        lokiStorage:
+          type: filesystem
+
+        # Use a specific image tag if desired
         image:
           tag: 3.5.3
+
+        # Disable self-monitoring features that rely on Grafana Agent
+        monitoring:
+          dashboards:
+            enabled: false
+          serviceMonitor:
+            enabled: false
+          rules:
+            enabled: false
   destination:
     server: https://kubernetes.default.svc
     namespace: kong-observability
