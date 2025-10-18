@@ -13,6 +13,8 @@ spec:
       releaseName: otel-collector
       values: |
         mode: deployment
+        image:
+          repository: otel/opentelemetry-collector-contrib
         config:
           receivers:
             otlp:
