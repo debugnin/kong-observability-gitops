@@ -47,6 +47,8 @@ spec:
       kind: "*"
     - group: cert-manager.io
       kind: "*"
+    - group: batch
+      kind: "*"
   roles:
     - name: admin
       policies:

@@ -12,6 +12,14 @@ spec:
     helm:
       releaseName: prometheus
       values: |
+        kubeEtcd:
+          enabled: false
+        kubeControllerManager:
+          enabled: false
+        kubeScheduler:
+          enabled: false
+        kubeProxy:
+          enabled: false
         prometheus:
           prometheusSpec:
             storageSpec:

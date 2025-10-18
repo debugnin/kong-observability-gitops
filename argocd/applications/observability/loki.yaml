@@ -12,6 +12,7 @@ spec:
     helm:
       releaseName: loki
       values: |
+        deploymentMode: SingleBinary
         loki:
           commonConfig:
             replication_factor: 1
