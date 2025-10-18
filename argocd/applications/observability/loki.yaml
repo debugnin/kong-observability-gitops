@@ -11,17 +11,27 @@ spec:
     targetRevision: 5.41.4
     helm:
       releaseName: loki
+      skipCrds: true
       values: |
-        deploymentMode: SingleBinary
         loki:
           auth_enabled: false
-          storage:
-            type: filesystem
+          commonConfig:
+            replication_factor: 1
+          useTestSchema: true
+          querier:
+            # Default is 4, if you have enough memory and CPU you can increase, reduce if OOMing
+            max_concurrent: 2
+          image:
+            tag: 3.5.3
+        deploymentMode: SingleBinary
         singleBinary:
+          replicas: 1
+        minio:
           enabled: true
-          persistence:
-            enabled: true
-            size: 10Gi
+        gateway:
+          enabled: false
+        chunksCache:
+          enabled: false
         backend:
           replicas: 0
         read:
@@ -46,13 +56,6 @@ spec:
           replicas: 0
         bloomGateway:
           replicas: 0
-        monitoring:
-          selfMonitoring:
-            enabled: false
-            grafanaAgent:
-              installOperator: false
-        test:
-          enabled: false
   destination:
     server: https://kubernetes.default.svc
     namespace: kong-observability
