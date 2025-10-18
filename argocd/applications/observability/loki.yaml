@@ -32,6 +32,8 @@ spec:
           enabled: false
         chunksCache:
           enabled: false
+        selfMonitoring:
+          enabled: false
         backend:
           replicas: 0
         read:

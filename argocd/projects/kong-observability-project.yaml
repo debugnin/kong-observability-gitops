@@ -52,8 +52,6 @@ spec:
       kind: "*"
     - group: monitoring.coreos.com
       kind: "*"
-    - group: monitoring.grafana.com
-      kind: "*"
   roles:
     - name: admin
       policies:
