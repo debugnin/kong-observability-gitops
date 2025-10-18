@@ -20,6 +20,12 @@ spec:
           enabled: false
         kubeProxy:
           enabled: false
+        coreDns:
+          enabled: false
+        kubeApiServer:
+          enabled: false
+        kubelet:
+          enabled: false
         prometheus:
           prometheusSpec:
             storageSpec:
