@@ -7,37 +7,33 @@ spec:
   project: kong-observability
   source:
     repoURL: https://prometheus-community.github.io/helm-charts
-    chart: kube-prometheus-stack
-    targetRevision: 55.5.0
+    chart: prometheus
+    targetRevision: 25.27.0
     helm:
       releaseName: prometheus
       values: |
-        kubeEtcd:
+        server:
+          persistentVolume:
+            enabled: true
+            storageClass: standard
+            accessModes:
+              - ReadWriteOnce
+            size: 10Gi
+          retention: "15d"
+        alertmanager:
+          enabled: true
+          persistentVolume:
+            enabled: true
+            storageClass: standard
+            accessModes:
+              - ReadWriteOnce
+            size: 2Gi
+        pushgateway:
           enabled: false
-        kubeControllerManager:
-          enabled: false
-        kubeScheduler:
-          enabled: false
-        kubeProxy:
-          enabled: false
-        coreDns:
-          enabled: false
-        kubeApiServer:
-          enabled: false
-        kubelet:
-          enabled: false
-        prometheus:
-          prometheusSpec:
-            storageSpec:
-              volumeClaimTemplate:
-                spec:
-                  storageClassName: standard
-                  accessModes: ["ReadWriteOnce"]
-                  resources:
-                    requests:
-                      storage: 10Gi
-        grafana:
-          enabled: false
+        kube-state-metrics:
+          enabled: true
+        prometheus-node-exporter:
+          enabled: true
   destination:
     server: https://kubernetes.default.svc
     namespace: kong-observability
@@ -47,5 +43,3 @@ spec:
       selfHeal: true
     syncOptions:
       - CreateNamespace=true
-      - ServerSideApply=true
-      - Replace=true
