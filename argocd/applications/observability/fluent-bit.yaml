@@ -14,19 +14,19 @@ spec:
       values: |
         kind: DaemonSet
         replicaCount: 1
-        
+
         image:
           repository: fluent/fluent-bit
           tag: 3.1.9
           pullPolicy: IfNotPresent
-        
+
         serviceAccount:
           create: true
-        
+
         rbac:
           create: true
           nodeAccess: true
-        
+
         config:
           service: |
             [SERVICE]
@@ -64,15 +64,14 @@ spec:
           
           outputs: |
             [OUTPUT]
-                Name http
+                Name opentelemetry
                 Match *
                 Host otel-collector-opentelemetry-collector.kong-observability.svc.cluster.local
                 Port 4318
-                URI /v1/logs
-                Format json
-                Json_date_key timestamp
-                Json_date_format iso8601
-        
+                logs_uri /v1/logs
+                log_response_payload true
+                tls off
+
         tolerations:
           - key: node-role.kubernetes.io/control-plane
             operator: Exists
@@ -80,7 +79,7 @@ spec:
           - key: node-role.kubernetes.io/master
             operator: Exists
             effect: NoSchedule
-        
+
         resources:
           limits:
             cpu: 100m
