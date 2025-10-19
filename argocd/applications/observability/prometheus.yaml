@@ -26,7 +26,7 @@ spec:
               - job_name: 'otel-collector'
                 scrape_interval: 5s
                 static_configs:
-                  - targets: ['otel-collector-opentelemetry-collector.kong-observability.svc:8889']
+                  - targets: ['otel-collector-opentelemetry-collector.kong-observability.svc.cluster.local:8889']
         alertmanager:
           enabled: true
           persistentVolume:
