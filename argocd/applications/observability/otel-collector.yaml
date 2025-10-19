@@ -67,22 +67,21 @@ spec:
               endpoint: http://loki:3100/otlp
             prometheus:
               endpoint: "0.0.0.0:8889"
-            debug:
-              verbosity: detailed
+
           service:
             pipelines:
               traces:
                 receivers: [otlp]
                 processors: [batch]
-                exporters: [otlp/jaeger, debug]
+                exporters: [otlp/jaeger]
               logs:
                 receivers: [otlp]
                 processors: [batch]
-                exporters: [otlphttp/loki, debug]
+                exporters: [otlphttp/loki]
               metrics:
                 receivers: [prometheus]
                 processors: [batch]
-                exporters: [prometheus, debug]
+                exporters: [prometheus]
   destination:
     server: https://kubernetes.default.svc
     namespace: kong-observability
