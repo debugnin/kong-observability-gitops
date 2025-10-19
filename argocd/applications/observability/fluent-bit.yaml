@@ -71,6 +71,9 @@ spec:
                 logs_uri /v1/logs
                 log_response_payload true
                 tls off
+                logs_body_key $message
+                logs_trace_id_message_key traceid
+                logs_span_id_message_key spanid
 
         tolerations:
           - key: node-role.kubernetes.io/control-plane
