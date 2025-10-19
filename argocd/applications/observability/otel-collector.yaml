@@ -65,8 +65,9 @@ spec:
                 insecure: true
             otlphttp/loki:
               endpoint: http://loki:3100/otlp/v1/logs
-            prometheusremotewrite:
-              endpoint: http://prometheus-server.kong-observability.svc:80/api/v1/write
+            prometheus:
+              endpoint: "0.0.0.0:8889"
+              namespace: "otelcol"
             debug:
               verbosity: detailed
           service:
@@ -82,7 +83,7 @@ spec:
               metrics:
                 receivers: [prometheus]
                 processors: [batch]
-                exporters: [prometheusremotewrite, debug]
+                exporters: [prometheus, debug]
   destination:
     server: https://kubernetes.default.svc
     namespace: kong-observability
