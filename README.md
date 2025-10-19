@@ -12,7 +12,6 @@ kong-observability-gitops/
 │   └── applications/
 │       ├── kong-observability-app-of-apps.yaml # Parent application
 │       └── observability/                      # Child applications
-│           ├── cert-manager.yaml
 │           ├── grafana.yaml
 │           ├── jaeger.yaml
 │           ├── loki.yaml
@@ -23,7 +22,6 @@ kong-observability-gitops/
 
 ## Components
 
-- **cert-manager**: Certificate management for TLS
 - **Prometheus**: Metrics collection and storage (kube-prometheus-stack)
 - **Grafana**: Visualization and dashboards
 - **Jaeger**: Distributed tracing
@@ -46,18 +44,20 @@ The parent application will automatically deploy all child applications in the `
 
 ## Access
 
-- **Grafana**: Port-forward to access the UI
+- **Grafana**: Port-forward to access the UI (Anonymous access enabled)
   ```bash
   kubectl port-forward -n kong-observability svc/grafana 3000:80
   ```
-  Default credentials: admin/admin
+  Access at: http://localhost:3000 (no login required)
 
 - **Prometheus**: Port-forward to access the UI
   ```bash
-  kubectl port-forward -n kong-observability svc/prometheus-kube-prometheus-prometheus 9090:9090
+  kubectl port-forward -n kong-observability svc/prometheus-server 9090:80
   ```
+  Access at: http://localhost:9090
 
 - **Jaeger**: Port-forward to access the UI
   ```bash
   kubectl port-forward -n kong-observability svc/jaeger-query 16686:16686
   ```
+  Access at: http://localhost:16686
