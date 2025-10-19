@@ -15,17 +15,10 @@ spec:
         mode: deployment
         image:
           repository: otel/opentelemetry-collector-contrib
-          tag: 0.136.0  # or match the chart version (check https://hub.docker.com/r/otel/opentelemetry-collector-contrib/tags)
+          tag: 0.136.0
           pullPolicy: IfNotPresent
         clusterRole:
           create: true
-          rules:
-          - apiGroups: [""]
-            resources: ["pods", "services", "endpoints"]
-            verbs: ["get", "list", "watch"]
-          - apiGroups: [""]
-            resources: ["nodes", "nodes/proxy", "nodes/metrics"]
-            verbs: ["get", "list", "watch"]
         ports:
           prometheus:
             enabled: true
@@ -46,22 +39,19 @@ spec:
                   - job_name: 'kong-gateway'
                     metrics_path: /metrics
                     kubernetes_sd_configs:
-                    - role: pod
-                      namespaces:
-                        names:
-                        - kong-anz
-                        - kong-cba
-                        - kong-nab
-                      selectors:
-                        - role: "pod"
-                          label: "app.kubernetes.io/name=kong"
+                      - role: pod
+                        namespaces:
+                          names:
+                            - kong-anz
+                            - kong-cba
+                            - kong-nab
                     relabel_configs:
-                    - source_labels: [ __meta_kubernetes_pod_container_port_name ]
-                      regex: 'status'
-                      action: keep
-                    - source_labels: [ __meta_kubernetes_pod_name ]
-                      action: replace
-                      target_label: instance
+                      - source_labels: [__meta_kubernetes_pod_label_app_kubernetes_io_name]
+                        regex: kong
+                        action: keep
+                      - source_labels: [__meta_kubernetes_pod_name]
+                        target_label: instance
+                        action: replace
           processors:
             batch: {}
           exporters:
@@ -70,12 +60,11 @@ spec:
               tls:
                 insecure: true
             otlphttp/loki:
-              endpoint: http://loki:3100/otlp
+              endpoint: http://loki:3100/otlp/v1/logs
             prometheus:
               endpoint: "0.0.0.0:8889"
             debug:
               verbosity: detailed
-
           service:
             pipelines:
               traces:
@@ -90,6 +79,7 @@ spec:
                 receivers: [prometheus]
                 processors: [batch]
                 exporters: [prometheus]
+
   destination:
     server: https://kubernetes.default.svc
     namespace: kong-observability
