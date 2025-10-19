@@ -17,6 +17,15 @@ spec:
           repository: otel/opentelemetry-collector-contrib
           tag: 0.136.0  # or match the chart version (check https://hub.docker.com/r/otel/opentelemetry-collector-contrib/tags)
           pullPolicy: IfNotPresent
+        clusterRole:
+          create: true
+          rules:
+          - apiGroups: [""]
+            resources: ["pods", "services", "endpoints"]
+            verbs: ["get", "list", "watch"]
+          - apiGroups: [""]
+            resources: ["nodes", "nodes/proxy", "nodes/metrics"]
+            verbs: ["get", "list", "watch"]
         config:
           receivers:
             otlp:
