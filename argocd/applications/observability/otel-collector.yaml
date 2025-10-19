@@ -25,6 +25,28 @@ spec:
                   endpoint: 0.0.0.0:4317
                 http:
                   endpoint: 0.0.0.0:4318
+            prometheus:
+              config:
+                scrape_configs:
+                  - job_name: 'kong-gateway'
+                    metrics_path: /metrics
+                    kubernetes_sd_configs:
+                    - role: pod
+                      namespaces:
+                        names:
+                        - kong-anz
+                        - kong-cba
+                        - kong-nab
+                      selectors:
+                        - role: "pod"
+                          label: "app.kubernetes.io/name=kong"
+                    relabel_configs:
+                    - source_labels: [ __meta_kubernetes_pod_container_port_name ]
+                      regex: 'status'
+                      action: keep
+                    - source_labels: [ __meta_kubernetes_pod_name ]
+                      action: replace
+                      target_label: instance
           processors:
             batch: {}
           exporters:
@@ -34,6 +56,8 @@ spec:
                 insecure: true
             otlphttp/loki:
               endpoint: http://loki:3100/otlp/v1/logs
+            prometheusremotewrite:
+              endpoint: http://prometheus-server.kong-observability.svc:80/api/v1/write
             debug:
               verbosity: detailed
           service:
@@ -46,6 +70,10 @@ spec:
                 receivers: [otlp]
                 processors: [batch]
                 exporters: [otlphttp/loki, debug]
+              metrics:
+                receivers: [prometheus]
+                processors: [batch]
+                exporters: [prometheusremotewrite, debug]
   destination:
     server: https://kubernetes.default.svc
     namespace: kong-observability
