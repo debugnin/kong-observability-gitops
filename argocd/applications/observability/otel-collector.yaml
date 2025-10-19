@@ -60,20 +60,22 @@ spec:
             batch: {}
           exporters:
             otlp/jaeger:
-              endpoint: jaeger-collector:4317
+              endpoint: jaeger-collector.kong-observability.svc.cluster.local:4317
               tls:
                 insecure: true
             otlphttp/loki:
               endpoint: http://loki:3100/otlp
             prometheus:
               endpoint: "0.0.0.0:8889"
+            debug:
+              verbosity: detailed
 
           service:
             pipelines:
               traces:
                 receivers: [otlp]
                 processors: [batch]
-                exporters: [otlp/jaeger]
+                exporters: [otlp/jaeger, debug]
               logs:
                 receivers: [otlp]
                 processors: [batch]
