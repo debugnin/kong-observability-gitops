@@ -53,6 +53,10 @@ spec:
           enabled: false
         resultsCache:
           enabled: false
+        gateway:
+          enabled: false
+        test:
+          enabled: false
 
         querier:
           max_concurrent: 2
