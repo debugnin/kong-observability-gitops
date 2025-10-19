@@ -22,11 +22,65 @@ spec:
           retention: "15d"
         serverFiles:
           prometheus.yml:
+            rule_files:
+              - "kong_alerts.yml"
             scrape_configs:
               - job_name: 'otel-collector'
                 scrape_interval: 5s
                 static_configs:
                   - targets: ['otel-collector-opentelemetry-collector.kong-observability.svc.cluster.local:8889']
+          kong_alerts.yml:
+            groups:
+              - name: kong_alerts
+                rules:
+                  - alert: KongHighLatency
+                    expr: histogram_quantile(0.90, rate(kong_request_latency_ms_bucket[1m])) > 100
+                    for: 1m
+                    labels:
+                      severity: critical
+                    annotations:
+                      summary: "Kong latency is high"
+                      description: "90% of Kong requests are taking longer than 100ms (current: {{ $value }}ms)"
+                  - alert: KongHighErrorRate
+                    expr: (rate(kong_http_requests_total{code=~"5.."}[1m]) / rate(kong_http_requests_total[1m])) * 100 > 0.5
+                    for: 1m
+                    labels:
+                      severity: info
+                    annotations:
+                      summary: "Kong error rate is elevated"
+                      description: "Kong error rate is {{ $value }}% (threshold: 0.5%)"
+                  - alert: KongNon2XXSpike
+                    expr: (rate(kong_http_requests_total{code!~"2.."}[1m]) / rate(kong_http_requests_total[1m])) * 100 > 5
+                    for: 1m
+                    labels:
+                      severity: info
+                    annotations:
+                      summary: "Kong non-2XX response spike"
+                      description: "{{ $value }}% of requests are non-2XX (threshold: 5%)"
+                  - alert: KongTrafficSpike
+                    expr: rate(kong_http_requests_total[1m]) > (avg_over_time(rate(kong_http_requests_total[5m])[30m:5m]) * 1.2)
+                    for: 1m
+                    labels:
+                      severity: info
+                    annotations:
+                      summary: "Kong traffic spike detected"
+                      description: "Traffic is {{ $value }} req/s, 20% above baseline"
+                  - alert: KongTrafficDrop
+                    expr: rate(kong_http_requests_total[1m]) < (avg_over_time(rate(kong_http_requests_total[5m])[30m:5m]) * 0.8)
+                    for: 1m
+                    labels:
+                      severity: info
+                    annotations:
+                      summary: "Kong traffic drop detected"
+                      description: "Traffic is {{ $value }} req/s, 20% below baseline"
+                  - alert: Kong500Responses
+                    expr: rate(kong_http_requests_total{code="500"}[1m]) > 0
+                    for: 0s
+                    labels:
+                      severity: critical
+                    annotations:
+                      summary: "Kong 500 responses detected"
+                      description: "Kong is returning 500 responses at {{ $value }} req/s"
         alertmanager:
           enabled: true
           persistentVolume:
