@@ -49,6 +49,10 @@ spec:
           storage:
             type: filesystem
           useTestSchema: true
+        chunksCache:
+          enabled: false
+        resultsCache:
+          enabled: false
 
         querier:
           max_concurrent: 2
