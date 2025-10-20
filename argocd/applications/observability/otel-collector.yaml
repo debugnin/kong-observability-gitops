@@ -19,6 +19,13 @@ spec:
           pullPolicy: IfNotPresent
         clusterRole:
           create: true
+          rules:
+            - apiGroups: [""]
+              resources: ["pods", "services", "endpoints", "nodes"]
+              verbs: ["get", "list", "watch"]
+            - apiGroups: [""]
+              resources: ["namespaces"]
+              verbs: ["get", "list", "watch"]
         ports:
           prometheus:
             enabled: true
@@ -60,7 +67,7 @@ spec:
               tls:
                 insecure: true
             otlphttp/loki:
-              endpoint: http://loki:3100/otlp/v1/logs
+              endpoint: http://loki.kong-observability.svc.cluster.local:3100/otlp
             prometheus:
               endpoint: "0.0.0.0:8889"
             debug:
