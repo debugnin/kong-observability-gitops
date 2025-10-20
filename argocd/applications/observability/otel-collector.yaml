@@ -56,6 +56,9 @@ spec:
                       - source_labels: [__meta_kubernetes_pod_label_app_kubernetes_io_name]
                         regex: kong
                         action: keep
+                      - source_labels: [__meta_kubernetes_pod_container_port_name]
+                        regex: status
+                        action: keep
                       - source_labels: [__meta_kubernetes_pod_name]
                         target_label: instance
                         action: replace
