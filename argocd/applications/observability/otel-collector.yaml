@@ -80,11 +80,11 @@ spec:
               traces:
                 receivers: [otlp]
                 processors: [batch]
-                exporters: [otlp/jaeger, debug]
+                exporters: [otlp/jaeger]
               logs:
                 receivers: [otlp]
                 processors: [batch]
-                exporters: [otlphttp/loki]
+                exporters: [otlphttp/loki, debug]
               metrics:
                 receivers: [prometheus]
                 processors: [batch]
