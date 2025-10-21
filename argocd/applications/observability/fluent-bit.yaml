@@ -27,6 +27,11 @@ spec:
           create: true
           nodeAccess: true
 
+        extraPorts:
+          - name: http-input
+            containerPort: 2021
+            protocol: TCP
+
         config:
           service: |
             [SERVICE]
@@ -48,6 +53,12 @@ spec:
                 Tag kube.*
                 Mem_Buf_Limit 50MB
                 Skip_Long_Lines On
+            
+            [INPUT]
+                Name http
+                Listen 0.0.0.0
+                Port 2021
+                Tag kong.http
           
           filters: |
             [FILTER]
