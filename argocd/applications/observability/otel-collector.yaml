@@ -63,7 +63,10 @@ spec:
                         target_label: instance
                         action: replace
           processors:
-            batch: {}
+            batch:
+              send_batch_size: 100
+              send_batch_max_size: 500
+              timeout: 1s
           exporters:
             otlp/jaeger:
               endpoint: jaeger-collector.kong-observability.svc.cluster.local:4317
@@ -71,6 +74,15 @@ spec:
                 insecure: true
             otlphttp/loki:
               endpoint: http://loki.kong-observability.svc.cluster.local:3100/otlp
+              retry_on_failure:
+                enabled: true
+                initial_interval: 5s
+                max_interval: 30s
+                max_elapsed_time: 300s
+              sending_queue:
+                enabled: true
+                num_consumers: 2
+                queue_size: 10
             prometheus:
               endpoint: "0.0.0.0:8889"
             debug:
