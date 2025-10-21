@@ -33,7 +33,7 @@ plugins:
         return h:match("%-([a-f0-9]+)%-[a-f0-9]+%-")
     flush_timeout: null
     headers: null
-    http_endpoint: http://fluent-bit.kong-observability.svc.cluster.local:2020
+    http_endpoint: http://fluent-bit.kong-observability.svc.cluster.local:2021
     keepalive: 60000
     method: POST
     queue:
